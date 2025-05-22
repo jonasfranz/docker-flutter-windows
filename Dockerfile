@@ -1,4 +1,3 @@
-# escape=`
 
 # Create a windows container and install VisualStudio in it.
 # This part is based on the official example from Microsoft.
