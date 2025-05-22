@@ -42,6 +42,8 @@ RUN powershell.exe -Command \
 
 RUN setx path "%path%;C:\flutter\bin;C:\flutter\bin\cache\dart-sdk\bin;"
 
+RUN git config --global --add safe.directory C:/flutter
+
 RUN git clone -b ${FLUTTER_VERSION} https://github.com/flutter/flutter.git C:\flutter
 
 RUN flutter config --no-analytics
@@ -50,21 +52,3 @@ RUN flutter config --enable-windows-desktop
 
 
 RUN flutter doctor -v
-
-# Install pwsh. This is the default shell expected by the windows gitlab runner for docker images.
-# If it is not installed, gitlab-runner is not able to use the image.
-# The installation procedure has been copied from the official gitlab-runner-helper image.
-# https://gitlab.com/gitlab-org/gitlab-runner/-/blob/main/dockerfiles/runner-helper/Dockerfile.x86_64_servercore
-#
-# The download is performed using powershell.
-SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
-# TLS1.2 has to enabled to download pwsh installer from GitHub.
-RUN New-Item -ItemType directory -Path C:\Downloads; `
-    [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12; `
-    Invoke-Webrequest "https://github.com/PowerShell/PowerShell/releases/download/v${Env:PWSH_VERSION}/PowerShell-${Env:PWSH_VERSION}-win-x64.msi" -OutFile C:\Downloads\pwsh.msi -UseBasicParsing
-
-# Run the installer and remove it afterwards.
-SHELL ["cmd", "/S", "/C"]
-RUN msiexec.exe /package "C:\Downloads\pwsh.msi" /quiet REGISTER_MANIFEST=1 && `
-    rmdir /s /q "C:\Downloads"
-RUN pwsh --version
