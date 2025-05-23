@@ -44,7 +44,7 @@ RUN setx path "%path%;C:\flutter\bin;C:\flutter\bin\cache\dart-sdk\bin;"
 
 RUN git config --global --add safe.directory C:/flutter
 
-RUN git clone -b ${FLUTTER_VERSION} https://github.com/flutter/flutter.git C:\flutter
+RUN powershell.exe -Command git clone -b $Env:FLUTTER_VERSION https://github.com/flutter/flutter.git C:\flutter
 
 RUN flutter config --no-analytics
 
