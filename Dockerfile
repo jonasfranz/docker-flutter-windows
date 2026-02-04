@@ -52,3 +52,5 @@ RUN flutter config --enable-windows-desktop
 
 
 RUN flutter doctor -v
+
+RUN powershell.exe -Command New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force
